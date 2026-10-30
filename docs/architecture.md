@@ -6,7 +6,7 @@ Prioritize iOS, support a browser client, and leave Android possible without reb
 
 ## Boundaries
 
-`ConsistentKingCore` contains platform-independent models and use cases. Client interfaces call that core and supply platform services through protocols as needed. Keep persistence, keychain access, notifications, HTTP transports, and UI code outside the portable domain layer. Add packages only after checking their target-platform support.
+`CheckmateCore` contains platform-independent models and use cases. Client interfaces call that core and supply platform services through protocols as needed. Keep persistence, keychain access, notifications, HTTP transports, and UI code outside the portable domain layer. Add packages only after checking their target-platform support.
 
 The root Swift package is a foundation, not a runnable iOS application. Add the SwiftUI app and its Xcode project in `apps/ios` when the first user flow is defined. It should depend on the root package locally.
 

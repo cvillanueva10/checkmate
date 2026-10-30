@@ -2,15 +2,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "ConsistentKing",
+    name: "Checkmate",
     platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
-        .library(name: "ConsistentKingCore", targets: ["ConsistentKingCore"]),
-        .executable(name: "consistent-king", targets: ["ConsistentKingCLI"])
+        .library(name: "CheckmateCore", targets: ["CheckmateCore"]),
+        .executable(name: "checkmate", targets: ["CheckmateCLI"])
     ],
     targets: [
-        .target(name: "ConsistentKingCore"),
-        .executableTarget(name: "ConsistentKingCLI", dependencies: ["ConsistentKingCore"]),
-        .testTarget(name: "ConsistentKingCoreTests", dependencies: ["ConsistentKingCore"])
+        .target(name: "CheckmateCore"),
+        .executableTarget(name: "CheckmateCLI", dependencies: ["CheckmateCore"]),
+        .testTarget(name: "CheckmateCoreTests", dependencies: ["CheckmateCore"])
     ]
 )

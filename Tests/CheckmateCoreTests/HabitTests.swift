@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import ConsistentKingCore
+@testable import CheckmateCore
 
 private var calendar: Calendar {
     var calendar = Calendar(identifier: .gregorian)

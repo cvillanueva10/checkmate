@@ -1,4 +1,4 @@
-# Consistent King
+# Checkmate
 
 Track daily tasks, build streaks, and set streak or consistency percentage goals. iOS first, with shared Swift business logic and planned web and Android clients.
 
@@ -11,14 +11,14 @@ Consistency is completed days divided by elapsed tracking days, including today,
 ```sh
 swift build
 swift test
-swift run consistent-king
+swift run checkmate
 ```
 
 Requires Swift 6.0 or newer. No third-party package dependencies.
 
 ## Direction
 
-- **Shared:** `ConsistentKingCore` for models, rules, validation, and use cases.
+- **Shared:** `CheckmateCore` for models, rules, validation, and use cases.
 - **iOS first:** native SwiftUI app consuming the local Swift package.
 - **Web:** browser-native UI with the shared core compiled to WebAssembly; validate JavaScript interop before committing to a web framework.
 - **Android later:** native UI consuming Swift through the official Android SDK and an interop layer.

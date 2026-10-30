@@ -13,4 +13,4 @@ jobs:
       - run: swift --version
       - run: swift build
       - run: swift test
-      - run: swift run consistent-king
+      - run: swift run checkmate
