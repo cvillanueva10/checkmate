@@ -1,28 +1,31 @@
 # Checkmate
 
-Track daily tasks, build streaks, and set streak or consistency percentage goals. iOS first, with shared Swift business logic and planned web and Android clients.
+Small daily habits. Lasting progress.
 
-## Starter status
+The current release is a responsive **Next.js + TypeScript PWA** in [apps/web](apps/web). Open Today, check off your daily habits, and keep moving. It works locally without an account and is prepared for Supabase account sync and Vercel hosting.
 
-The portable Swift core supports named daily habits, check-ins and undo, streak goals, and consistency percentage goals over inclusive date ranges. An installable iOS app, persistence, browser UI, WebAssembly bindings, and Android bindings have not been implemented yet.
+- Today cards with check/undo, streak counts, and clear completion states.
+- Quick habit creation with optional icons.
+- Current/longest streaks and an editable history calendar.
+- Rename, accessible reorder controls, archive, and restore.
+- IndexedDB persistence and offline app shell.
+- Supabase email-auth integration, queued sync, and PostgreSQL owner-isolation policies.
+- Automated domain, browser/offline, and database checks.
 
-Consistency is completed days divided by elapsed tracking days, including today, capped at the end date. A percentage goal reports whether the current percentage meets the target; it can change until the period ends. Streak goals are reached when the longest streak meets the target. An unfinished today preserves yesterday's current streak. Each habit uses an explicit calendar for day boundaries; duplicate check-ins count once and future check-ins are rejected.
+```sh
+cd apps/web
+npm install
+npm run dev
+```
+
+See the [web setup and deployment guide](apps/web/README.md). Live Supabase/Vercel configuration is required for hosted accounts and cross-device sync; local tracking does not require either service.
+
+## Existing Swift core
+
+The prior portable Swift package remains in `Sources/CheckmateCore`, with its tests in `Tests`. It supports daily check-ins, streak goals, and consistency percentage goals. It is retained for future native clients; this web release uses TypeScript domain logic and does not ship a Swift/Wasm bridge.
 
 ```sh
 swift build
 swift test
 swift run checkmate
 ```
-
-Requires Swift 6.0 or newer. No third-party package dependencies.
-
-## Direction
-
-- **Shared:** `CheckmateCore` for models, rules, validation, and use cases.
-- **iOS first:** native SwiftUI app consuming the local Swift package.
-- **Web:** browser-native UI with the shared core compiled to WebAssembly; validate JavaScript interop before committing to a web framework.
-- **Android later:** native UI consuming Swift through the official Android SDK and an interop layer.
-
-Swift is the shared language. There is no single turnkey framework in this starter that supplies all three platform integrations.
-
-See [architecture](docs/architecture.md), [cloud setup](docs/cloud-setup.md), and [agent instructions](AGENTS.md).
