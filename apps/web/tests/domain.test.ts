@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { acknowledge, completedDays, emptySnapshot, enqueue, localDay, mergeRows, shiftDay, streaks, type Habit, type DailyCheck } from "../lib/domain";
+import { acknowledge, completedDays, emptySnapshot, enqueue, localDay, mergeRows, shiftDay, stamp, streaks, type Habit, type DailyCheck } from "../lib/domain";
 const habit: Habit = { id: "a", user_id:"guest", name:"Walk", icon:"✦",start_date:"2026-01-01",display_order:0,archived_at:null,updated_at:"2026-01-01T00:00:00.000Z",mutation_id:"a" };
 const check = (day: string, completed = true): DailyCheck => ({ id:"a:"+day, habit_id:"a", user_id:"guest", local_date:day,completed_at:completed?"2026-01-01T00:00:00.000Z":null,updated_at:"2026-01-01T00:00:00.000Z",mutation_id:"a" });
 describe("daily streak rules", () => {
@@ -46,4 +46,12 @@ describe("offline retries and merge", () => {
     expect(acknowledge(state,["a"]).pending).toHaveLength(1);
     expect(acknowledge(state,["b"]).pending).toHaveLength(0);
   });
+});
+
+it("compares server timestamp formats by instant and keeps local edits monotonic", () => {
+  const local=check("2026-01-01");
+  const remote={...local,completed_at:null,updated_at:"2026-01-01T00:00:00+00:00",mutation_id:"z"};
+  expect(mergeRows([local],[remote],c=>c.id)[0].completed_at).toBeNull();
+  const state=emptySnapshot("guest"); state.checks=[{...local,updated_at:"2099-01-01T00:00:00Z"}];
+  expect(Date.parse(stamp(state).updated_at)).toBeGreaterThan(Date.parse(state.checks[0].updated_at));
 });

@@ -36,7 +36,8 @@ export function streaks(habit: Habit, checks: DailyCheck[], today: Day) {
   return { current, longest, completed: done.has(today), total: done.size };
 }
 export function newer(a: Versioned, b: Versioned) {
-  return a.updated_at > b.updated_at || (a.updated_at === b.updated_at && a.mutation_id > b.mutation_id);
+  const at = Date.parse(a.updated_at), bt = Date.parse(b.updated_at);
+  return at > bt || (at === bt && a.mutation_id > b.mutation_id);
 }
 export function mergeRows<T extends Versioned>(local: T[], remote: T[], key: (row: T) => string): T[] {
   const rows = new Map(local.map(row => [key(row), row]));
@@ -54,7 +55,7 @@ export function acknowledge(state: Snapshot, mutationIds: string[]): Snapshot {
   return { ...state, pending: state.pending.filter(p => !mutationIds.includes(p.row.mutation_id)) };
 }
 export function stamp(state: Snapshot): Versioned {
-  const last = Math.max(0, ...state.pending.map(p => Date.parse(p.row.updated_at)));
+  const last = [...state.habits, ...state.checks, ...state.pending.map(p => p.row)].reduce((max, row) => Math.max(max, Date.parse(row.updated_at)), 0);
   return { updated_at: new Date(Math.max(Date.now(), last + 1)).toISOString(), mutation_id: crypto.randomUUID() };
 }
 export function emptySnapshot(scope: string): Snapshot {

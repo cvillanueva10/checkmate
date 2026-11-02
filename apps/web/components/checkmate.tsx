@@ -58,6 +58,9 @@ export default function Checkmate() {
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
       navigator.serviceWorker.register("/sw.js").then(async () => {
         await navigator.serviceWorker.ready;
+        if (!navigator.serviceWorker.controller) await new Promise<void>(resolve => {
+          navigator.serviceWorker.addEventListener("controllerchange", () => resolve(), { once: true });
+        });
         // Cache the public JS/CSS app shell even on the first controlled visit.
         const assets = performance.getEntriesByType("resource").map(entry => entry.name).filter(url => url.startsWith(location.origin + "/_next/static/"));
         navigator.serviceWorker.controller?.postMessage({ type: "CACHE_ASSETS", assets });
