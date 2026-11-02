@@ -1,0 +1,6 @@
+import { deflateSync } from "node:zlib";
+import { writeFileSync } from "node:fs";
+function crc(buf) { let c=0xffffffff; for(const b of buf) { c^=b; for(let i=0;i<8;i++) c=(c>>>1)^((c&1)?0xedb88320:0); } return (c^0xffffffff)>>>0; }
+function chunk(name,data) { const type=Buffer.from(name), size=Buffer.alloc(4), sum=Buffer.alloc(4); size.writeUInt32BE(data.length); sum.writeUInt32BE(crc(Buffer.concat([type,data]))); return Buffer.concat([size,type,data,sum]); }
+function distance(x,y,ax,ay,bx,by) { const dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))); return Math.hypot(x-ax-t*dx,y-ay-t*dy); }
+for(const n of [180,192,512]) { const pixels=Buffer.alloc(n*(n*4+1)); for(let y=0;y<n;y++) for(let x=0;x<n;x++){ const i=y*(n*4+1)+1+x*4; const check=Math.min(distance(x/n,y/n,.28,.51,.43,.66),distance(x/n,y/n,.43,.66,.73,.34))<.041; pixels.set(check?[219,245,154,255]:[23,59,49,255],i); } const hdr=Buffer.alloc(13); hdr.writeUInt32BE(n);hdr.writeUInt32BE(n,4);hdr[8]=8;hdr[9]=6; const png=Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk("IHDR",hdr),chunk("IDAT",deflateSync(pixels)),chunk("IEND",Buffer.alloc(0))]);writeFileSync(n===180?"public/apple-touch-icon.png":"public/icon-"+n+".png",png); }
